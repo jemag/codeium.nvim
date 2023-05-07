@@ -402,7 +402,11 @@ function M.post(url, params)
 	if type(params.body) == "table" then
 		params.headers = params.headers or {}
 		params.headers["content-type"] = params.headers["content-type"] or "application/json"
-		params.body = vim.fn.json_encode(params.body)
+    local ok
+		ok, params.body = pcall(vim.fn.json_encode, params.body)
+    if not ok then
+      return
+    end
 	end
 
 	local cb = vim.schedule_wrap(params.callback)
